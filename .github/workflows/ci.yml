@@ -8,7 +8,7 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
-    # >>> todos os "run" vão ser executados dentro de bootcamp-pwa-cep-fixed
+    # todos os comandos "run" começam dentro da pasta do projeto
     defaults:
       run:
         working-directory: bootcamp-pwa-cep-fixed
@@ -26,13 +26,13 @@ jobs:
       - name: Install deps web
         run: |
           cd apps/web
-          npm ci
+          npm install
 
       # Instala dependências do backend
       - name: Install deps api
         run: |
           cd apps/api
-          npm ci
+          npm install
 
       # Testes unitários do front (Vitest)
       - name: Unit tests web
