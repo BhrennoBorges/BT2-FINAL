@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps web
+        run: |
+          cd apps/web
+          npm ci
+
+      - name: Install deps api
+        run: |
+          cd apps/api
+          npm ci
+
+      - name: Unit tests web
+        run: |
+          cd apps/web
+          npm test
+
+      - name: Build web
+        run: |
+          cd apps/web
+          npm run build
+
+      - name: Start API
+        run: |
+          cd apps/api
+          npm start &
+          sleep 10
+
+      - name: Start web preview
+        run: |
+          cd apps/web
+          npm run preview -- --port 8080 &
+          sleep 15
+
+      - name: Playwright tests
+        run: |
+          cd apps/web
+          npx playwright install --with-deps
+          E2E_BASE_URL=http://localhost:8080 npm run test:e2e
+
+      - name: Upload web dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: apps/web/dist
