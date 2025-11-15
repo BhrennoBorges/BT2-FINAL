@@ -8,6 +8,11 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    # >>> todos os "run" vão ser executados dentro de bootcamp-pwa-cep-fixed
+    defaults:
+      run:
+        working-directory: bootcamp-pwa-cep-fixed
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,46 +22,54 @@ jobs:
         with:
           node-version: '20'
 
+      # Instala dependências do front (PWA)
       - name: Install deps web
         run: |
           cd apps/web
           npm ci
 
+      # Instala dependências do backend
       - name: Install deps api
         run: |
           cd apps/api
           npm ci
 
+      # Testes unitários do front (Vitest)
       - name: Unit tests web
         run: |
           cd apps/web
           npm test
 
+      # Build do PWA
       - name: Build web
         run: |
           cd apps/web
           npm run build
 
+      # Sobe a API para os testes E2E
       - name: Start API
         run: |
           cd apps/api
           npm start &
           sleep 10
 
+      # Sobe o preview do Vite para os testes E2E
       - name: Start web preview
         run: |
           cd apps/web
           npm run preview -- --port 8080 &
           sleep 15
 
+      # Testes E2E com Playwright
       - name: Playwright tests
         run: |
           cd apps/web
           npx playwright install --with-deps
           E2E_BASE_URL=http://localhost:8080 npm run test:e2e
 
+      # Publica o build como artefato
       - name: Upload web dist
         uses: actions/upload-artifact@v4
         with:
           name: web-dist
-          path: apps/web/dist
+          path: bootcamp-pwa-cep-fixed/apps/web/dist
