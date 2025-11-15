@@ -1,0 +1,22 @@
+{
+  "name": "bootcamp-pwa-cep-web",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.0.0",
+    "@playwright/test": "^1.49.0",
+    "vite": "^5.0.0",
+    "vitest": "^2.1.0"
+  }
+}
